@@ -1,10 +1,1626 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>Document</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COIP — 암호화폐 모의투자 플랫폼 · Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg: #0a0e14;
+  --bg-2: #0f141c;
+  --bg-3: #161b25;
+  --bg-4: #1c2230;
+  --line: #232a39;
+  --line-2: #2d3548;
+  --text: #e8ecf3;
+  --text-2: #a8b0c0;
+  --text-3: #6b7488;
+  --accent: #3b82f6;
+  --accent-2: #60a5fa;
+  --accent-glow: rgba(59,130,246,0.15);
+  --green: #10b981;
+  --red: #ef4444;
+  --amber: #f59e0b;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+html, body{
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  letter-spacing: -0.01em;
+}
+
+::selection{background:var(--accent);color:white}
+
+.mono{font-family:'JetBrains Mono', monospace}
+
+.wrap{
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+/* ───────────── HERO ───────────── */
+.hero{
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 80px 0;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before{
+  content:"";
+  position:absolute;
+  top:-200px; right:-200px;
+  width:600px; height:600px;
+  background: radial-gradient(circle, var(--accent-glow), transparent 60%);
+  pointer-events:none;
+}
+.hero::after{
+  content:"";
+  position:absolute;
+  bottom:-300px; left:-200px;
+  width:700px; height:700px;
+  background: radial-gradient(circle, rgba(16,185,129,0.08), transparent 60%);
+  pointer-events:none;
+}
+.hero-inner{position:relative;z-index:2}
+
+.hero-tag{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  font-family:'JetBrains Mono', monospace;
+  font-size:12px;
+  font-weight:500;
+  color: var(--accent-2);
+  background: rgba(59,130,246,0.1);
+  border: 1px solid rgba(59,130,246,0.3);
+  padding: 8px 14px;
+  border-radius: 100px;
+  margin-bottom: 32px;
+  letter-spacing: 0.05em;
+}
+.hero-tag .dot{
+  width:6px;height:6px;border-radius:50%;
+  background: var(--accent-2);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse{
+  0%,100%{opacity:1;transform:scale(1);box-shadow:0 0 0 0 var(--accent-2)}
+  50%{opacity:0.6;transform:scale(1.2);box-shadow:0 0 0 6px rgba(96,165,250,0)}
+}
+
+.hero h1{
+  font-size: clamp(48px, 8vw, 96px);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+  margin-bottom: 28px;
+}
+.hero h1 .gradient{
+  background: linear-gradient(135deg, var(--accent) 0%, #8b5cf6 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.hero p.lead{
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--text-2);
+  max-width: 720px;
+  line-height: 1.6;
+  margin-bottom: 48px;
+}
+.hero p.lead strong{color:var(--text);font-weight:600}
+
+.hero-stats{
+  display:grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 28px 0;
+  margin-bottom: 48px;
+}
+.hero-stat{
+  padding: 0 24px;
+  border-right: 1px solid var(--line);
+}
+.hero-stat:last-child{border-right:none}
+.hero-stat .k{
+  font-family:'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+}
+.hero-stat .v{
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -0.02em;
+}
+.hero-stat .v.accent{color:var(--accent-2)}
+.hero-stat .v.green{color:var(--green)}
+
+.hero-meta{
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-family:'JetBrains Mono', monospace;
+  font-size: 12px;
+}
+.hero-meta .chip{
+  padding: 6px 12px;
+  background: var(--bg-3);
+  border: 1px solid var(--line);
+  color: var(--text-2);
+  border-radius: 4px;
+}
+.hero-meta .chip strong{color:var(--text);font-weight:600;margin-left:6px}
+
+.scroll-cue{
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family:'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-3);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  animation: bob 2s ease-in-out infinite;
+}
+@keyframes bob{
+  0%,100%{transform:translate(-50%, 0)}
+  50%{transform:translate(-50%, 6px)}
+}
+
+/* ───────────── SECTION ───────────── */
+section{
+  padding: 100px 0;
+  border-top: 1px solid var(--line);
+}
+.sec-head{
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+.sec-num{
+  font-family:'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent-2);
+  letter-spacing: 0.05em;
+}
+.sec-title{
+  font-size: 40px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+.sec-title em{
+  font-style: normal;
+  color: var(--text-3);
+  font-weight: 400;
+}
+.sec-tag{
+  margin-left: auto;
+  font-family:'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.sec-desc{
+  font-size: 16px;
+  color: var(--text-2);
+  max-width: 760px;
+  margin-bottom: 48px;
+  line-height: 1.7;
+}
+
+/* ───────────── PROCESS ───────────── */
+.process-row{
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 32px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--line);
+  transition: background 0.2s;
+}
+.process-row:hover{background: var(--bg-2)}
+.process-row .pnum{
+  font-family:'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-3);
+  padding-top: 4px;
+}
+.process-row .pnum::before{
+  content:"";
+  display: inline-block;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  margin-right: 8px;
+  vertical-align: middle;
+}
+.process-row.active .pnum{color: var(--accent-2)}
+.process-row.active .pnum::before{
+  background: var(--accent-2);
+  box-shadow: 0 0 0 4px rgba(59,130,246,0.2);
+  animation: pulse 2s ease-in-out infinite;
+}
+.process-row .pcontent h4{
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-bottom: 4px;
+}
+.process-row .pcontent p{
+  font-size: 14px;
+  color: var(--text-3);
+  line-height: 1.5;
+}
+.process-phase-label{
+  font-family:'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--accent-2);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  padding: 28px 0 12px;
+  border-bottom: 1px solid var(--line);
+  font-weight: 600;
+}
+.process-phase-label:first-child{padding-top:0}
+
+/* ───────────── SHOWCASE ───────────── */
+.showcase-item{
+  margin-bottom: 100px;
+  position: relative;
+}
+.showcase-item:last-child{margin-bottom:0}
+
+.showcase-frame{
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--line-2);
+  background: var(--bg-3);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.04);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+.showcase-frame:hover{
+  transform: translateY(-4px);
+  box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(59,130,246,0.2);
+}
+.showcase-titlebar{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: var(--bg-4);
+  border-bottom: 1px solid var(--line);
+}
+.showcase-titlebar .dots{display:flex;gap:6px}
+.showcase-titlebar .dots span{
+  width:11px;height:11px;border-radius:50%;
+}
+.showcase-titlebar .dots span:nth-child(1){background:#ff5f57}
+.showcase-titlebar .dots span:nth-child(2){background:#febc2e}
+.showcase-titlebar .dots span:nth-child(3){background:#28c840}
+.showcase-titlebar .url{
+  flex: 1;
+  text-align: center;
+  font-family:'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--text-3);
+  background: var(--bg-2);
+  padding: 4px 12px;
+  border-radius: 6px;
+  margin: 0 60px 0 12px;
+}
+.showcase-titlebar .url::before{
+  content:"🔒 ";
+  font-size: 10px;
+}
+.showcase-frame img{
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.showcase-meta{
+  margin-top: 28px;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 40px;
+  align-items: start;
+}
+.showcase-meta .label{
+  font-family:'JetBrains Mono', monospace;
+  font-size: 11px;
+  color: var(--accent-2);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.showcase-meta .label .new{
+  background: var(--accent);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+}
+.showcase-meta .path{
+  font-family:'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--text-3);
+}
+.showcase-meta h3{
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+.showcase-meta .desc{
+  font-size: 15px;
+  color: var(--text-2);
+  line-height: 1.7;
+  margin-bottom: 16px;
+}
+.feat-list{
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+.feat-list span{
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-2);
+  background: var(--bg-3);
+  border: 1px solid var(--line);
+  padding: 6px 12px;
+  border-radius: 20px;
+}
+
+/* ───────────── STACK ───────────── */
+.stack-grid{
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+.stack-card{
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 24px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+.stack-card:hover{
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+.stack-card::before{
+  content:"";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 2px;
+  background: linear-gradient(90deg, var(--accent), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.stack-card:hover::before{opacity:1}
+.stack-card .layer{
+  font-family:'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-bottom: 12px;
+}
+.stack-card .tech{
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+.stack-card .reason{
+  font-size: 13px;
+  color: var(--text-3);
+  line-height: 1.5;
+}
+
+/* ───────────── PHASE ───────────── */
+.phase-list{display:grid;gap:16px}
+.phase-card{
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 24px 28px;
+  display: grid;
+  grid-template-columns: 100px 1fr 180px 100px;
+  gap: 24px;
+  align-items: center;
+  transition: all 0.3s;
+}
+.phase-card:hover{border-color: var(--line-2)}
+.phase-card.done{border-left: 3px solid var(--green)}
+.phase-card.active{border-left: 3px solid var(--accent); background: linear-gradient(90deg, var(--accent-glow), transparent 30%)}
+.phase-card.planned{border-left: 3px solid var(--line-2); opacity: 0.65}
+.phase-tag{
+  font-family:'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent-2);
+  letter-spacing: 0.05em;
+}
+.phase-info h4{font-size:18px;font-weight:600;letter-spacing:-0.01em;margin-bottom:4px}
+.phase-info p{font-size:13px;color:var(--text-3)}
+.phase-date{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--text-2);text-align:right}
+.phase-status{
+  font-family:'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-align: center;
+  padding: 6px 12px;
+  border-radius: 4px;
+}
+.phase-card.done .phase-status{background:rgba(16,185,129,0.15);color:var(--green)}
+.phase-card.active .phase-status{background:rgba(59,130,246,0.15);color:var(--accent-2)}
+.phase-card.planned .phase-status{background:var(--bg-3);color:var(--text-3)}
+
+/* ───────────── ARCH ───────────── */
+.arch-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:16px}
+.arch-block{
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 28px;
+}
+.arch-block h4{
+  font-size: 14px;
+  font-family:'JetBrains Mono', monospace;
+  font-weight: 600;
+  color: var(--accent-2);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+.arch-flow{
+  font-family:'JetBrains Mono', monospace;
+  font-size: 12px;
+  line-height: 1.9;
+  color: var(--text-2);
+  white-space: pre;
+  overflow-x: auto;
+}
+.arch-flow .y{color:#fbbf24;font-weight:600}
+.arch-flow .g{color:var(--green);font-weight:600}
+.arch-flow .b{color:var(--accent-2);font-weight:600}
+.arch-flow .r{color:var(--red);font-weight:600}
+.arch-flow .c{color:#a78bfa}
+
+/* ───────────── INFRA ───────────── */
+.infra-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px}
+.infra-stat{
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 20px;
+}
+.infra-stat .lbl{
+  font-family:'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 10px;
+}
+.infra-stat .val{font-size:18px;font-weight:700;color:var(--text);letter-spacing:-0.01em;margin-bottom:4px}
+.infra-stat .sub{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-3)}
+
+/* ───────────── ERD ───────────── */
+.erd-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.erd-card{
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  overflow: hidden;
+  font-family:'JetBrains Mono', monospace;
+}
+.erd-card .eh{
+  background: var(--bg-4);
+  color: var(--accent-2);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 10px 12px;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--line);
+}
+.erd-card .eb{padding:10px 12px;font-size:11px;line-height:1.7;color:var(--text-3)}
+.erd-card .eb .pk{color:var(--amber);font-weight:600}
+.erd-card .eb .fk{color:var(--accent-2)}
+
+/* ───────────── REFLECT ───────────── */
+.reflect-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.reflect-card{
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 32px;
+}
+.reflect-card h4{
+  font-size: 14px;
+  font-family:'JetBrains Mono', monospace;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.reflect-card h4 .icon{
+  width: 20px; height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  font-size: 12px;
+}
+.reflect-card.learn h4{color:var(--green)}
+.reflect-card.learn h4 .icon{background:rgba(16,185,129,0.15)}
+.reflect-card.challenge h4{color:var(--amber)}
+.reflect-card.challenge h4 .icon{background:rgba(245,158,11,0.15)}
+.reflect-card ul{list-style:none;padding:0}
+.reflect-card ul li{
+  font-size: 14px;
+  color: var(--text-2);
+  line-height: 1.7;
+  padding: 10px 0;
+  padding-left: 24px;
+  position: relative;
+  border-bottom: 1px dashed var(--line);
+}
+.reflect-card ul li:last-child{border-bottom:none}
+.reflect-card ul li::before{
+  content: "→";
+  position: absolute;
+  left: 0;
+  color: var(--text-3);
+  font-family:'JetBrains Mono', monospace;
+}
+.reflect-card ul li strong{color:var(--text);font-weight:600}
+
+/* ───────────── AI WORKFLOW ───────────── */
+.ai-grid{
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 24px;
+  align-items: stretch;
+  margin-bottom: 24px;
+}
+.ai-stack{
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.ai-step{
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 22px 24px;
+  position: relative;
+  transition: all 0.3s;
+}
+.ai-step:hover{
+  border-color: var(--accent);
+  transform: translateX(4px);
+}
+.ai-step::before{
+  content:"";
+  position: absolute;
+  left: 0; top: 22px; bottom: 22px;
+  width: 3px;
+  background: var(--accent);
+  border-radius: 0 2px 2px 0;
+  opacity: 0.5;
+}
+.ai-step-num{
+  font-family:'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--accent-2);
+  letter-spacing: 0.15em;
+  margin-bottom: 8px;
+}
+.ai-step h4{
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  margin-bottom: 6px;
+}
+.ai-step p{
+  font-size: 13.5px;
+  color: var(--text-2);
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+.ai-meta{
+  font-size: 10px;
+  color: var(--text-3);
+  letter-spacing: 0.1em;
+  padding-top: 10px;
+  border-top: 1px dashed var(--line);
+}
+
+.ai-code-frame{
+  background: #0c1018;
+  border: 1px solid var(--line-2);
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.ai-code-head{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  background: var(--bg-4);
+  border-bottom: 1px solid var(--line);
+}
+.ai-code-dots{display:flex;gap:5px}
+.ai-code-dots span{width:10px;height:10px;border-radius:50%}
+.ai-code-dots span:nth-child(1){background:#ff5f57}
+.ai-code-dots span:nth-child(2){background:#febc2e}
+.ai-code-dots span:nth-child(3){background:#28c840}
+.ai-code-title{
+  font-size: 12px;
+  color: var(--text-2);
+  font-weight: 500;
+  margin-left: 6px;
+}
+.ai-code-tag{
+  margin-left: auto;
+  font-family:'JetBrains Mono', monospace;
+  font-size: 10px;
+  color: var(--text-3);
+  background: var(--bg-2);
+  padding: 3px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+}
+.ai-code{
+  font-family:'JetBrains Mono', monospace;
+  font-size: 12.5px;
+  line-height: 1.75;
+  color: var(--text-2);
+  padding: 22px;
+  margin: 0;
+  overflow-x: auto;
+  flex: 1;
+}
+.ai-code .cm{color:var(--text-3);font-style:italic}
+.ai-code .ck{color:#c084fc;font-weight:600}
+.ai-code .cs{color:var(--text);font-weight:600}
+.ai-code .cv{color:#fbbf24}
+.ai-code .cr{color:var(--red)}
+
+.ai-benefits{
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-top: 24px;
+}
+.ai-benefit{
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 18px 20px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  transition: all 0.3s;
+}
+.ai-benefit:hover{border-color:var(--accent);background:var(--bg-3)}
+.ai-benefit-num{
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--accent-2);
+  line-height: 1;
+  flex-shrink: 0;
+  width: 32px;
+  text-align: center;
+}
+.ai-benefit-text{display:flex;flex-direction:column;gap:2px}
+.ai-benefit-text strong{
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: -0.01em;
+}
+.ai-benefit-text span{
+  font-size: 12px;
+  color: var(--text-3);
+  line-height: 1.5;
+}
+
+/* ───────────── FOOTER ───────────── */
+footer{padding:80px 0 60px;border-top:1px solid var(--line);text-align:center}
+footer .big{
+  font-size: 56px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  background: linear-gradient(135deg, var(--accent), #8b5cf6);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 16px;
+}
+footer .info{
+  font-family:'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--text-3);
+  letter-spacing: 0.05em;
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+footer .info span{display:flex;align-items:center;gap:6px}
+footer .info span::before{content:"●";font-size:6px;color:var(--accent-2)}
+footer .info span:first-child::before{display:none}
+
+@media (max-width: 980px){
+  .wrap{padding:0 20px}
+  .hero h1{font-size:48px}
+  .hero-stats{grid-template-columns:repeat(2,1fr)}
+  .hero-stat{padding:16px;border-right:none;border-bottom:1px solid var(--line)}
+  .stack-grid, .infra-grid, .erd-grid, .ai-benefits{grid-template-columns:repeat(2,1fr)}
+  .arch-grid, .reflect-grid, .showcase-meta, .ai-grid{grid-template-columns:1fr}
+  .phase-card{grid-template-columns:1fr;gap:8px;text-align:left}
+  .phase-date,.phase-status{text-align:left}
+  .sec-title{font-size:28px}
+}
+</style>
 </head>
 <body>
-    <h1>추가예정</h1>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<section class="hero">
+  <div class="wrap hero-inner">
+    <div class="hero-tag">
+      <span class="dot"></span>
+      <span>LIVE · staging.coip.kktrkkt.dev</span>
+    </div>
+
+    <h1>
+      실전처럼 연습하는<br>
+      <span class="gradient">코인 모의투자.</span>
+    </h1>
+
+    <p class="lead">
+      <strong>COIP</strong>는 암호화폐 모의투자 + 트레이더 커뮤니티 플랫폼입니다.
+      실시간 업비트 시세 위에 가상 자금으로 매매를 연습하고,
+      게시글과 실시간 채팅으로 전략을 공유합니다.
+      <strong>리스크는 0, 데이터는 실전.</strong>
+    </p>
+
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <div class="k">개발 기간</div>
+        <div class="v">2개월</div>
+      </div>
+      <div class="hero-stat">
+        <div class="k">개발 인원</div>
+        <div class="v">2인</div>
+      </div>
+      <div class="hero-stat">
+        <div class="k">완료 이슈</div>
+        <div class="v green">26개</div>
+      </div>
+      <div class="hero-stat">
+        <div class="k">현재 단계</div>
+        <div class="v accent">Phase 1D</div>
+      </div>
+    </div>
+
+    <div class="hero-meta">
+      <div class="chip">Stack <strong>Django · PostgreSQL · Channels</strong></div>
+      <div class="chip">Infra <strong>GCP · GKE · Jenkins</strong></div>
+      <div class="chip">Region <strong>asia-northeast3 · Seoul</strong></div>
+      <div class="chip">Period <strong>2026.04.24 → 05.22</strong></div>
+    </div>
+  </div>
+  <div class="scroll-cue">Scroll ↓</div>
+</section>
+
+
+<!-- ═══════════════ 01 OVERVIEW ═══════════════ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">01 / 10</span>
+      <h2 class="sec-title">프로젝트 <em>개요</em></h2>
+      <span class="sec-tag">Overview</span>
+    </div>
+
+    <p class="sec-desc">
+      암호화폐 시장의 <strong style="color:var(--text)">높은 변동성</strong>과 <strong style="color:var(--text)">진입 장벽</strong>으로
+      초보 투자자가 실제 자금 손실 없이 매매 경험을 쌓기 어렵습니다.
+      COIP는 실시간 시세는 그대로 사용하되 주문·체결·잔고만 서버 내 시뮬레이션으로 처리해,
+      <strong style="color:var(--accent-2)">"현실과 동일한 결과"</strong>를 약속하는 모의투자 환경을 제공합니다.
+    </p>
+
+    <div class="reflect-grid">
+      <div class="reflect-card learn">
+        <h4><span class="icon">◆</span> 핵심 가치</h4>
+        <ul>
+          <li><strong>리스크 제로 연습</strong> — 가상 KRW 1천만 원 초기 지급</li>
+          <li><strong>실시간 시세</strong> — 업비트 KRW 마켓 실가격 사용 (260종목)</li>
+          <li><strong>성과 추적</strong> — 누적 손익·수익률·거래내역으로 실력 확인</li>
+          <li><strong>트레이더 커뮤니티</strong> — 분석·전략·인증을 게시글·채팅으로 공유</li>
+        </ul>
+      </div>
+      <div class="reflect-card challenge">
+        <h4><span class="icon">▣</span> 타겟 사용자</h4>
+        <ul>
+          <li><strong>주 타겟</strong> — 실제 자금 투입이 부담스러운 초보 투자자</li>
+          <li><strong>부 타겟</strong> — 새로운 매매 전략을 검증하려는 중급 투자자</li>
+          <li><strong>데스크탑 우선</strong> — 최소 1280px, 한국어·KRW 기준</li>
+          <li><strong>모의투자 원칙</strong> — 실제 자산·입출금·레버리지 없음</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════ 02 PROCESS ═══════════════ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">02 / 10</span>
+      <h2 class="sec-title">개발 <em>프로세스</em></h2>
+      <span class="sec-tag">15-Step Process</span>
+    </div>
+
+    <p class="sec-desc">
+      기획부터 배포·운영까지 한 사람이 모든 단계를 책임지는 풀스택 흐름이었습니다.
+      각 단계는 다음 단계의 입력이 되도록 산출물 → 산출물 체인으로 연결했습니다.
+    </p>
+
+    <div class="process">
+      <div class="process-phase-label">▸ 기획 (Planning)</div>
+      <div class="process-row">
+        <div class="pnum">01</div>
+        <div class="pcontent">
+          <h4>일정 및 목표 수립</h4>
+          <p>전체 2개월 일정 확정 · 1차/2차/3차 목표 분리 · 마감일 2026-05-22</p>
+        </div>
+      </div>
+      <div class="process-row">
+        <div class="pnum">02</div>
+        <div class="pcontent">
+          <h4>MVP 정의</h4>
+          <p>1차 거래사이트 → 2차 전략 시뮬레이션 → 3차 실제 매매 (3-Tier MVP)</p>
+        </div>
+      </div>
+      <div class="process-row">
+        <div class="pnum">03</div>
+        <div class="pcontent">
+          <h4>기능 정의</h4>
+          <p>페이지별 기능 카탈로그 · Must / Should / Could / Won't 우선순위 명시</p>
+        </div>
+      </div>
+      <div class="process-row">
+        <div class="pnum">04</div>
+        <div class="pcontent">
+          <h4>프로젝트 스펙 정의</h4>
+          <p>Django(FE+BE) · PostgreSQL 결정 · 개발 속도와 트랜잭션 정합성 우선</p>
+        </div>
+      </div>
+
+      <div class="process-phase-label">▸ 디자인 (Design)</div>
+      <div class="process-row">
+        <div class="pnum">05</div>
+        <div class="pcontent">
+          <h4>디자인 레이아웃 잡기</h4>
+          <p>거래소 3패널 · 투자내역 탭 구조 · 인증 폼 등 와이어프레임 8종</p>
+        </div>
+      </div>
+      <div class="process-row">
+        <div class="pnum">06</div>
+        <div class="pcontent">
+          <h4>실제 디자인 (Claude 활용)</h4>
+          <p>Claude로 HTML 시안 생성 · 토큰 시스템 · 다크 테마 확정</p>
+        </div>
+      </div>
+
+      <div class="process-phase-label">▸ 설계 (Architecture)</div>
+      <div class="process-row">
+        <div class="pnum">07</div>
+        <div class="pcontent">
+          <h4>ERD 정의</h4>
+          <p>15개 엔티티 · User/Order/Trade/Post/ChatMessage 등 · 1:1, 1:N, N:M 관계</p>
+        </div>
+      </div>
+      <div class="process-row">
+        <div class="pnum">08</div>
+        <div class="pcontent">
+          <h4>PRD 작성 (ERD + 디자인 기반)</h4>
+          <p>버전 0.3 · 페이지별 기능 · 비기능 요구사항 · Out of Scope 명시</p>
+        </div>
+      </div>
+      <div class="process-row">
+        <div class="pnum">09</div>
+        <div class="pcontent">
+          <h4>아키텍처 정의 (PRD 기반)</h4>
+          <p>버전 0.6 · DTL 패턴 확정 · Channels는 채팅 전용 · 시세는 클라이언트 직결</p>
+        </div>
+      </div>
+
+      <div class="process-phase-label">▸ 실행 (Execution)</div>
+      <div class="process-row">
+        <div class="pnum">10</div>
+        <div class="pcontent">
+          <h4>간트차트 작성</h4>
+          <p>Phase 1A → 1B → 1C → 1D 일정 시각화 · 의존 관계 명시 · 병렬 작업 트랙 분리</p>
+        </div>
+      </div>
+      <div class="process-row">
+        <div class="pnum">11</div>
+        <div class="pcontent">
+          <h4>이슈 등록 (GitHub Issues)</h4>
+          <p>총 26개 이슈 등록 · P1 / P2 / P3 우선순위 라벨링 · 마일스톤 할당</p>
+        </div>
+      </div>
+      <div class="process-row">
+        <div class="pnum">12</div>
+        <div class="pcontent">
+          <h4>1차 목표 완성 (Phase 1A·1B·1C)</h4>
+          <p>인증 · 거래소 · 투자내역 모두 머지 완료 · 16개 이슈 처리</p>
+        </div>
+      </div>
+
+      <div class="process-phase-label">▸ 배포 (Deployment)</div>
+      <div class="process-row">
+        <div class="pnum">13</div>
+        <div class="pcontent">
+          <h4>클라우드 + 쿠버네티스 배포 환경 설계</h4>
+          <p>GCP / GKE 선정 · prod / staging 네임스페이스 · HPA / PDB 정책 설계</p>
+        </div>
+      </div>
+      <div class="process-row">
+        <div class="pnum">14</div>
+        <div class="pcontent">
+          <h4>배포 환경 구축</h4>
+          <p>Jenkins CI/CD · cert-manager TLS · ingress-nginx · pgbouncer 풀러 완성</p>
+        </div>
+      </div>
+      <div class="process-row active">
+        <div class="pnum">15</div>
+        <div class="pcontent">
+          <h4>2차 목표 진행 중 (Phase 1D)</h4>
+          <p>실시간 채팅 · 커뮤니티 · 마이페이지 — 10개 이슈 진행 중 · 마감 5/22</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════ 03 SCREENSHOTS ═══════════════ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">03 / 10</span>
+      <h2 class="sec-title">실제 <em>구현 화면</em></h2>
+      <span class="sec-tag">Live Screenshots</span>
+    </div>
+
+    <p class="sec-desc">
+      staging 환경에 배포된 실제 화면입니다. 모든 기능이 동작하며, 시세는 업비트 KRW 마켓을 실시간으로 가져옵니다.
+    </p>
+
+    <!-- 1: Landing -->
+    <div class="showcase-item">
+      <div class="showcase-frame">
+        <div class="showcase-titlebar">
+          <div class="dots"><span></span><span></span><span></span></div>
+          <div class="url">staging.coip.kktrkkt.dev/</div>
+        </div>
+        <img src="screenshots/staging_coip_kktrkkt_dev_.png" alt="COIP 랜딩 페이지">
+      </div>
+      <div class="showcase-meta">
+        <div>
+          <div class="label">01 — Landing</div>
+          <div class="path mono">/</div>
+        </div>
+        <div>
+          <h3>실전처럼 연습하는 코인 모의투자</h3>
+          <p class="desc">서비스 소개 히어로 + 핵심 통계 카드(가상 자금·코인 수·수수료) + 실시간 시세 미리보기 Top 5. 비로그인도 시세는 자유롭게 볼 수 있도록 구성했습니다.</p>
+          <div class="feat-list">
+            <span>Hero CTA</span>
+            <span>실시간 시세</span>
+            <span>가상 자금 1천만 원</span>
+            <span>260종목</span>
+            <span>수수료 0.05%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2: Exchange -->
+    <div class="showcase-item">
+      <div class="showcase-frame">
+        <div class="showcase-titlebar">
+          <div class="dots"><span></span><span></span><span></span></div>
+          <div class="url">staging.coip.kktrkkt.dev/exchange/</div>
+        </div>
+        <img src="screenshots/staging_coip_kktrkkt_dev_exchange_.png" alt="COIP 거래소 페이지">
+      </div>
+      <div class="showcase-meta">
+        <div>
+          <div class="label">02 — Exchange</div>
+          <div class="path mono">/exchange/</div>
+        </div>
+        <div>
+          <h3>거래소 — 실시간 시세 · 호가 · 주문</h3>
+          <p class="desc">왼쪽 코인 목록, 중앙 캔들차트 + 호가창, 오른쪽 주문 패널, 하단 미체결/체결/잔고 탭으로 구성된 4분할 레이아웃. Upbit WebSocket으로 시세를 직접 수신하고, 주문·체결은 서버에서 시뮬레이션합니다.</p>
+          <div class="feat-list">
+            <span>Upbit WebSocket 직결</span>
+            <span>캔들차트 (Canvas)</span>
+            <span>MACD · RSI · 거래량</span>
+            <span>호가 10×10</span>
+            <span>지정가 · 시장가</span>
+            <span>퀵 주문 버튼</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3: Portfolio -->
+    <div class="showcase-item">
+      <div class="showcase-frame">
+        <div class="showcase-titlebar">
+          <div class="dots"><span></span><span></span><span></span></div>
+          <div class="url">staging.coip.kktrkkt.dev/portfolio/</div>
+        </div>
+        <img src="screenshots/staging_coip_kktrkkt_dev_portfolio_.png" alt="COIP 투자내역 페이지">
+      </div>
+      <div class="showcase-meta">
+        <div>
+          <div class="label">03 — Portfolio</div>
+          <div class="path mono">/portfolio/</div>
+        </div>
+        <div>
+          <h3>투자내역 — 자산 · 손익 · 거래내역</h3>
+          <p class="desc">상단 요약 카드(총 자산 · 총 투자금액 · 총 수익) + 보유자산 / 투자손익 / 거래내역 3개 탭. 도넛 차트로 포트폴리오 구성을 보여주고, 종목별 평균 매수가 대비 현재가의 손익률을 색상으로 강조합니다.</p>
+          <div class="feat-list">
+            <span>요약 카드 3종</span>
+            <span>포트폴리오 도넛</span>
+            <span>보유 종목 손익</span>
+            <span>누적 손익 차트</span>
+            <span>기간 필터</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4: Community -->
+    <div class="showcase-item">
+      <div class="showcase-frame">
+        <div class="showcase-titlebar">
+          <div class="dots"><span></span><span></span><span></span></div>
+          <div class="url">staging.coip.kktrkkt.dev/community/</div>
+        </div>
+        <img src="screenshots/staging_coip_kktrkkt_dev_community_.png" alt="COIP 커뮤니티 페이지">
+      </div>
+      <div class="showcase-meta">
+        <div>
+          <div class="label">04 — Community <span class="new">NEW</span></div>
+          <div class="path mono">/community/</div>
+        </div>
+        <div>
+          <h3>커뮤니티 — 게시글 + 글로벌 실시간 채팅</h3>
+          <p class="desc">3컬럼 레이아웃 (좌: 검색·인기글·북마크 사이드바 / 중: 게시글 목록 / 우: 글로벌 채팅). Django Channels + Daphne 기반 WebSocket으로 모든 사용자가 실시간으로 소통합니다. 게시글에는 본인 거래내역을 첨부할 수 있어 "인증 매매" 문화가 가능합니다.</p>
+          <div class="feat-list">
+            <span>3컬럼 레이아웃</span>
+            <span>Channels WebSocket</span>
+            <span>인기순/최신순/조회순</span>
+            <span>거래내역 첨부</span>
+            <span>댓글 + 1단계 답글</span>
+            <span>좋아요 · 북마크</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════ 04 STACK ═══════════════ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">04 / 10</span>
+      <h2 class="sec-title">기술 <em>스택</em></h2>
+      <span class="sec-tag">Tech Stack</span>
+    </div>
+
+    <p class="sec-desc">
+      <strong style="color:var(--text)">개발 속도</strong>와 <strong style="color:var(--text)">트랜잭션 정합성</strong>을 양 축으로 기술을 선정했습니다.
+      이미 학습한 Django/DTL을 메인으로 가져가되, 실시간 채팅 같은 부분만 Channels로 보강했습니다.
+    </p>
+
+    <div class="stack-grid">
+      <div class="stack-card">
+        <div class="layer">Frontend</div>
+        <div class="tech">Django Template</div>
+        <div class="reason">학습 비용 없는 DTL 선택 — SPA 도입 보류로 개발 속도 우선</div>
+      </div>
+      <div class="stack-card">
+        <div class="layer">Backend</div>
+        <div class="tech">Django 5.2</div>
+        <div class="reason">DTL 뷰 + ModelForm 기본, DRF는 시세·주문·채팅 JSON 한정</div>
+      </div>
+      <div class="stack-card">
+        <div class="layer">Database</div>
+        <div class="tech">PostgreSQL</div>
+        <div class="reason">잔고·주문 트랜잭션 정합성 필수, SQLite/MySQL 후보 중 선정</div>
+      </div>
+      <div class="stack-card">
+        <div class="layer">Realtime</div>
+        <div class="tech">Channels + Daphne</div>
+        <div class="reason">코인별·글로벌 채팅 브로드캐스트 — 백엔드 WebSocket 유일 용도</div>
+      </div>
+      <div class="stack-card">
+        <div class="layer">Auth</div>
+        <div class="tech">JWT + OAuth</div>
+        <div class="reason">simplejwt 쿠키 세션 + Google OAuth · SameSite=Lax</div>
+      </div>
+      <div class="stack-card">
+        <div class="layer">Chart</div>
+        <div class="tech">HTML Canvas</div>
+        <div class="reason">외부 라이브러리 의존 없이 캔들·MACD·RSI 직접 구현</div>
+      </div>
+      <div class="stack-card">
+        <div class="layer">Channel Layer</div>
+        <div class="tech">Redis</div>
+        <div class="reason">멀티 워커 환경에서 channels_redis로 group_send 지원</div>
+      </div>
+      <div class="stack-card">
+        <div class="layer">Test / CI</div>
+        <div class="tech">pytest + Jenkins</div>
+        <div class="reason">pytest-django로 단위·통합 테스트 · Jenkinsfile 파이프라인</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════ 05 PHASES ═══════════════ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">05 / 10</span>
+      <h2 class="sec-title">개발 <em>단계</em></h2>
+      <span class="sec-tag">5 Phases · 26 Issues</span>
+    </div>
+
+    <p class="sec-desc">
+      기능 단위로 Phase를 나누어 점진적으로 배포·검증을 반복했습니다.
+      각 Phase 종료 시점에 머지된 이슈만 다음 Phase의 기반이 됩니다.
+    </p>
+
+    <div class="phase-list">
+      <div class="phase-card done">
+        <div class="phase-tag">PHASE 1A</div>
+        <div class="phase-info">
+          <h4>인증 시스템</h4>
+          <p>이메일·비밀번호 + Google OAuth · JWT 쿠키 세션 · 이메일 인증 3단계 회원가입</p>
+        </div>
+        <div class="phase-date">05.08 — 05.09</div>
+        <div class="phase-status">완료</div>
+      </div>
+      <div class="phase-card done">
+        <div class="phase-tag">PHASE 1B</div>
+        <div class="phase-info">
+          <h4>거래소 (9 issues)</h4>
+          <p>실시간 시세 · 캔들차트 · 호가창 · 주문 · 체결 엔진 · 4분할 레이아웃</p>
+        </div>
+        <div class="phase-date">05.08 — 05.17</div>
+        <div class="phase-status">완료</div>
+      </div>
+      <div class="phase-card done">
+        <div class="phase-tag">PHASE 1C</div>
+        <div class="phase-info">
+          <h4>투자내역 (5 issues)</h4>
+          <p>지갑 API · 포트폴리오 서비스 · 보유자산 / 손익 / 거래내역 탭 · 랜딩 시세</p>
+        </div>
+        <div class="phase-date">05.16 — 05.21</div>
+        <div class="phase-status">완료</div>
+      </div>
+      <div class="phase-card active">
+        <div class="phase-tag">PHASE 1D</div>
+        <div class="phase-info">
+          <h4>커뮤니티 · 채팅 · 마이페이지 (10 issues)</h4>
+          <p>Channels 채팅 인프라 · 게시글 · 댓글 · 거래내역 첨부 · 프로필 · 알림 설정</p>
+        </div>
+        <div class="phase-date">05.14 — 05.22</div>
+        <div class="phase-status">진행 중</div>
+      </div>
+      <div class="phase-card planned">
+        <div class="phase-tag">PHASE 2</div>
+        <div class="phase-info">
+          <h4>매매 전략 자동화 (planned)</h4>
+          <p>전략 빌더 · 백테스트 엔진 · FCM/APNs 푸시 알림 실송신 · 2FA</p>
+        </div>
+        <div class="phase-date">미정</div>
+        <div class="phase-status">계획</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════ 06 ARCHITECTURE ═══════════════ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">06 / 10</span>
+      <h2 class="sec-title">시스템 <em>아키텍처</em></h2>
+      <span class="sec-tag">Architecture v0.6</span>
+    </div>
+
+    <p class="sec-desc">
+      <strong style="color:var(--text)">"DTL이 기본, REST는 필요한 곳만"</strong> 원칙으로 단순함을 우선했습니다.
+      시세 데이터는 백엔드를 거치지 않고 클라이언트가 Upbit API에 직접 연결해 복잡도를 줄였습니다. -> 사용자 많아지면 이용약관 위배이므로 수정 예정
+    </p>
+
+    <div class="arch-grid">
+      <div class="arch-block">
+        <h4>▸ Application Flow</h4>
+<div class="arch-flow"><span class="g">Browser</span>
+  │
+  ├── HTTP ─▶ <span class="b">Django (WSGI)</span>
+  │            ├── DTL 뷰 (커뮤니티·마이페이지)
+  │            ├── ModelForm + messages
+  │            └── DRF (시세·주문 JSON)
+  │
+  ├── WebSocket ─▶ <span class="b">Daphne (ASGI)</span>
+  │            └── <span class="c">ChatConsumer</span> (GLOBAL · 코인별)
+  │
+  └── 직접 호출 ─▶ <span class="y">Upbit Public API</span>
+               ├── REST /v1/ticker, /v1/candles
+               └── WebSocket 실시간 체결가·호가</div>
+      </div>
+
+      <div class="arch-block">
+        <h4>▸ Data &amp; Infrastructure</h4>
+<div class="arch-flow"><span class="b">Django Backend</span>
+  │
+  ├──▶ <span class="y">pgbouncer:5432</span> (transaction)
+  │      └──▶ <span class="g">PostgreSQL</span> (StatefulSet, 20Gi)
+  │
+  ├──▶ <span class="r">Redis</span> (Channel layer · group_send)
+  │
+  └──▶ <span class="c">MEDIA_ROOT</span> /avatars/ (NFS RWX)
+
+External Services:
+  ├── SMTP (이메일 인증)
+  └── Google OAuth 2.0</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════ 07 ERD ═══════════════ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">07 / 10</span>
+      <h2 class="sec-title">데이터 <em>모델</em></h2>
+      <span class="sec-tag">15 Entities · ERD</span>
+    </div>
+
+    <p class="sec-desc">
+      도메인을 6개 영역으로 나누어 엔티티를 구성했습니다:
+      <strong style="color:var(--text)">계정 / 자산 / 시장 / 거래 / 커뮤니티 / 채팅</strong>.
+      가상 자금 잔고는 회원가입 시 1천만 원이 자동 지급됩니다.
+    </p>
+
+    <div class="erd-grid">
+      <div class="erd-card"><div class="eh">User</div><div class="eb"><div class="pk">id PK</div><div>email · UNQ</div><div>nickname</div><div>password_hash</div></div></div>
+      <div class="erd-card"><div class="eh">UserProfile</div><div class="eb"><div class="fk">user_id 1:1</div><div>avatar_url</div><div>bio (200)</div><div>sns_link1·2</div></div></div>
+      <div class="erd-card"><div class="eh">NotificationPref</div><div class="eb"><div class="fk">user_id 1:1</div><div>email · push</div><div>trade · price</div><div>community · news</div></div></div>
+      <div class="erd-card"><div class="eh">Balance</div><div class="eb"><div class="fk">user_id 1:1</div><div>krw_amount</div><div style="color:var(--amber)">init 10,000,000</div></div></div>
+      <div class="erd-card"><div class="eh">Coin</div><div class="eb"><div class="pk">id PK (BTC)</div><div>name</div><div>logo · market</div></div></div>
+
+      <div class="erd-card"><div class="eh">Candle</div><div class="eb"><div class="fk">coin_id</div><div>timestamp</div><div>OHLCV</div></div></div>
+      <div class="erd-card"><div class="eh">Order</div><div class="eb"><div class="pk">id PK</div><div class="fk">user · coin</div><div>type · side</div><div>filled · status</div></div></div>
+      <div class="erd-card"><div class="eh">Trade</div><div class="eb"><div class="pk">id PK</div><div class="fk">order · user</div><div>price · qty · fee</div></div></div>
+      <div class="erd-card"><div class="eh">Holding</div><div class="eb"><div class="fk">user · coin</div><div>qty</div><div>avg_price</div></div></div>
+      <div class="erd-card"><div class="eh">Post</div><div class="eb"><div class="pk">id PK</div><div class="fk">author · trade</div><div>title · content</div><div>anonymous</div></div></div>
+
+      <div class="erd-card"><div class="eh">Comment</div><div class="eb"><div class="pk">id PK</div><div class="fk">post · author</div><div class="fk">parent (1-lvl)</div></div></div>
+      <div class="erd-card"><div class="eh">PostLike</div><div class="eb"><div class="pk">PK 복합</div><div>post + user</div></div></div>
+      <div class="erd-card"><div class="eh">CommentLike</div><div class="eb"><div class="pk">PK 복합</div><div>comment + user</div></div></div>
+      <div class="erd-card"><div class="eh">Bookmark</div><div class="eb"><div class="pk">PK 복합</div><div>post + user</div></div></div>
+      <div class="erd-card"><div class="eh">ChatMessage</div><div class="eb"><div class="pk">id PK</div><div>room (GLOBAL · sym)</div><div class="fk">user_id</div></div></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════ 08 INFRA ═══════════════ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">08 / 10</span>
+      <h2 class="sec-title">배포 <em>인프라</em></h2>
+      <span class="sec-tag">GCP · GKE · CI/CD</span>
+    </div>
+
+    <p class="sec-desc">
+      개발 환경부터 운영까지 모두 직접 구축했습니다. GKE 위에 prod/staging 분리,
+      Jenkins로 자동 배포, 비용 절감을 위한 CronJob 스케줄링까지 포함됩니다.
+    </p>
+
+    <div class="infra-grid">
+      <div class="infra-stat">
+        <div class="lbl">Cloud</div>
+        <div class="val">GCP · GKE</div>
+        <div class="sub">asia-northeast3-a</div>
+      </div>
+      <div class="infra-stat">
+        <div class="lbl">Cluster</div>
+        <div class="val">coip-cluster</div>
+        <div class="sub">v1.35.3-gke.1389000</div>
+      </div>
+      <div class="infra-stat">
+        <div class="lbl">Node Pool</div>
+        <div class="val">e2-standard-2</div>
+        <div class="sub">1~4 · spot for staging</div>
+      </div>
+      <div class="infra-stat">
+        <div class="lbl">Ingress</div>
+        <div class="val">34.47.87.188</div>
+        <div class="sub">cert-manager TLS</div>
+      </div>
+      <div class="infra-stat">
+        <div class="lbl">Workloads</div>
+        <div class="val">coip-web · coip-asgi</div>
+        <div class="sub">pgbouncer · postgres · redis</div>
+      </div>
+      <div class="infra-stat">
+        <div class="lbl">HPA</div>
+        <div class="val">web 2~10 / asgi 2~6</div>
+        <div class="sub">CPU 70% / Mem 80%</div>
+      </div>
+      <div class="infra-stat">
+        <div class="lbl">Storage</div>
+        <div class="val">RWO + NFS RWX</div>
+        <div class="sub">postgres 20Gi · media 10Gi</div>
+      </div>
+      <div class="infra-stat">
+        <div class="lbl">CI/CD</div>
+        <div class="val">Jenkins + GHCR</div>
+        <div class="sub">pytest · trivy · kaniko</div>
+      </div>
+    </div>
+
+    <div class="arch-block">
+      <h4>▸ Request Flow</h4>
+<div class="arch-flow"><span class="g">Internet</span>
+  │
+  ▼
+<span class="y">Cloudflare DNS</span>   coip.kktrkkt.dev  ·  staging.coip.kktrkkt.dev  ·  jenkins.kktrkkt.dev
+  │
+  ▼
+<span class="b">ingress-nginx</span> (GKE LoadBalancer · 34.47.87.188 · cert-manager TLS)
+  │
+  ├── <span class="c">/ws/chat/</span>      ─▶ <span class="y">coip-asgi</span>   (Daphne · WebSocket)
+  ├── <span class="c">/media/, /</span>     ─▶ <span class="y">coip-web</span>    (Daphne · HTTP · DTL)
+  ├── <span class="c">/upbit-proxy/</span>  ─▶ api.upbit.com  (nginx reverse proxy · CORS 우회)
+  └── <span class="c">jenkins.…/</span>     ─▶ <span class="y">jenkins</span>     (CI/CD)
+                                       │
+                              ┌────────┴─────────┐
+                              ▼                  ▼
+                       <span class="y">pgbouncer</span>          <span class="r">redis</span>
+                       (txn pool)         (channel layer)
+                              │
+                              ▼
+                         <span class="g">PostgreSQL</span> (StatefulSet · 20Gi)</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════ 09 AI WORKFLOW ═══════════════ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">09 / 10</span>
+      <h2 class="sec-title">AI 페어 <em>워크플로우</em></h2>
+      <span class="sec-tag">Claude Code · Dev Environment</span>
+    </div>
+
+    <p class="sec-desc">
+      2인 팀이 빠르게 개발하기 위해 <strong style="color:var(--text)">Claude Code</strong>를 페어 프로그래머로 두고 개발했습니다.
+      플러그인과 규칙(rules) 파일을 미리 등록해 매번 컨텍스트를 다시 설명하지 않아도 일관된 코드가 나오도록 환경을 세팅했습니다.
+    </p>
+
+    <div class="ai-grid">
+
+      <!-- LEFT: 3 STEPS -->
+      <div class="ai-stack">
+        <div class="ai-step">
+          <div class="ai-step-num">STEP 01</div>
+          <h4>everything-claude-code 플러그인 설치</h4>
+          <p>Claude Code의 컨텍스트·규칙·MCP 연동을 한 번에 관리하는 메타 플러그인을 설치해 환경을 통일했습니다. 팀원 모두 동일한 동작을 보장.</p>
+          <div class="ai-meta mono">PLUGIN · 팀 공유 환경</div>
+        </div>
+
+        <div class="ai-step">
+          <div class="ai-step-num">STEP 02</div>
+          <h4>Rules 등록 — 공통 + Python</h4>
+          <p>전체 프로젝트에 적용되는 <strong style="color:var(--text)">공통 규칙</strong>과 백엔드용 <strong style="color:var(--text)">Python 규칙</strong>만 선별해 등록. 불필요한 규칙으로 토큰을 낭비하지 않도록 최소화했습니다.</p>
+          <div class="ai-meta mono">RULES · 공통 / Python only</div>
+        </div>
+
+        <div class="ai-step">
+          <div class="ai-step-num">STEP 03</div>
+          <h4>CLAUDE.md 작성</h4>
+          <p>작업 흐름과 참고해야 할 지식을 <strong style="color:var(--text)">파일 경로로 명시</strong>해 Claude가 필요할 때 직접 읽도록 했습니다. 컨텍스트 윈도우를 작게 유지하면서도 깊은 도메인 지식 접근이 가능.</p>
+          <div class="ai-meta mono">CONTEXT · 파일 참조 기반</div>
+        </div>
+      </div>
+
+      <!-- RIGHT: CLAUDE.md mock -->
+      <div class="ai-code-frame">
+        <div class="ai-code-head">
+          <span class="ai-code-dots"><span></span><span></span><span></span></span>
+          <span class="ai-code-title mono">CLAUDE.md</span>
+          <span class="ai-code-tag">project root</span>
+        </div>
+<pre class="ai-code"><span class="cm"># COIP — Claude Code Workflow</span>
+
+<span class="ck">##</span> <span class="cs">작업 흐름</span>
+1. 이슈 확인 → <span class="cv">@docs/PRD.md</span> 에서 해당 기능 스펙 로드
+2. <span class="cv">@docs/ARCHITECTURE.md</span> 에서 관련 앱·모델 확인
+3. <span class="cv">@apps/{app}/tests/</span> 부터 작성 (TDD)
+4. 구현 → 테스트 통과 → 커밋 → 코드리뷰 -> 리뷰반영 -> PR
+
+<span class="ck">##</span> <span class="cs">참고 지식 (필요할 때만 읽기)</span>
+- <span class="cv">@docs/PRD.md</span>           제품 요구사항 v0.3
+- <span class="cv">@docs/ARCHITECTURE.md</span>  아키텍처 v0.6 (DTL 패턴)
+- <span class="cv">@docs/GANTT.md</span>         일정·이슈 의존 관계
+
+<span class="ck">##</span> <span class="cs">코딩 규칙</span>
+- <span class="ck">rule 파일 참고</span>: ./claude/.rules 폴더 참고
+
+      </div>
+    </div>
+
+    <!-- benefits row -->
+    <div class="ai-benefits">
+      <div class="ai-benefit">
+        <div class="ai-benefit-num">↑</div>
+        <div class="ai-benefit-text">
+          <strong>일관된 컨벤션</strong>
+          <span>팀원 2명 + AI 모두 동일한 코드 스타일로 작업</span>
+        </div>
+      </div>
+      <div class="ai-benefit">
+        <div class="ai-benefit-num">↓</div>
+        <div class="ai-benefit-text">
+          <strong>컨텍스트 비용 최소화</strong>
+          <span>파일 참조 방식으로 필요한 지식만 로드</span>
+        </div>
+      </div>
+      <div class="ai-benefit">
+        <div class="ai-benefit-num">⇄</div>
+        <div class="ai-benefit-text">
+          <strong>문서 ↔ 코드 동기화</strong>
+          <span>PRD가 바뀌면 Claude도 즉시 새 규칙으로 작업</span>
+        </div>
+      </div>
+      <div class="ai-benefit">
+        <div class="ai-benefit-num">×</div>
+        <div class="ai-benefit-text">
+          <strong>매번 설명 반복 제거</strong>
+          <span>"DTL 패턴이야", "@PRD 보고" 같은 안내가 자동화</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════ 10 REFLECTION ═══════════════ -->
+<section>
+  <div class="wrap">
+    <div class="sec-head">
+      <span class="sec-num">10 / 10</span>
+      <h2 class="sec-title">회고 &amp; <em>학습</em></h2>
+      <span class="sec-tag">Reflection</span>
+    </div>
+
+    <p class="sec-desc">
+      2인 팀으로 기획·디자인·개발·배포를 모두 진행하면서 얻은 인사이트와 마주친 도전 과제를 정리했습니다.
+    </p>
+
+    <div class="reflect-grid">
+      <div class="reflect-card learn">
+        <h4><span class="icon">✓</span> 배운 점</h4>
+        <ul>
+          <li><strong>문서가 곧 코드의 절반</strong>이다. PRD → 아키텍처 → 이슈로 이어지는 체인 덕에 다음 작업이 명확했다.</li>
+          <li><strong>AI 페어 프로그래밍의 위력</strong> — CLAUDE.md에 작업 흐름과 참고 지식을 명시한 덕에 컨텍스트 로딩 비용이 거의 0에 가까웠다.</li>
+          <li><strong>HPA + spot 노드</strong>로 staging 비용을 약 60% 절감했다. 평일 09→00 CronJob 스케일다운까지 더해 더 줄였다.</li>
+          <li><strong>2인 팀도 K8s 운영이 가능</strong>하다는 자신감을 얻었다.</li>
+        </ul>
+      </div>
+      <div class="reflect-card challenge">
+        <h4><span class="icon">!</span> 도전 과제</h4>
+        <ul>
+          <li><strong>개발</strong>클로드로 기능 개발을 이슈를 만들고 구현 과정 직접 첨삭</li>
+          <li><strong>디자인</strong>클로드 디자인으로 시안을 보고 직접 수정</li>
+          <li><strong>배포</strong>devops 레포지토리를 만들어 k8s 문서화 이후 claude를 통해 컨트롤 중</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════ FOOTER ═══════════════ -->
+<footer>
+  <div class="wrap">
+    <div class="big">COIP</div>
+    <div class="info">
+      <span>Documentation 2026.05.19</span>
+      <span>PRD v0.3</span>
+      <span>Architecture v0.6</span>
+      <span>Gantt v0.6</span>
+      <span style="color:var(--accent-2)">Next: Phase 1D 완료 → 05.22</span>
+    </div>
+  </div>
+</footer>
+
 </body>
 </html>
